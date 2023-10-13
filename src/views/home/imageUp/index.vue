@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { reqUploadImg } from '@/api/data.js'
 import { ElMessage } from 'element-plus'
 let act = ref(1)
@@ -34,6 +34,8 @@ const handleFileChange = async (event) => {
   // 处理文件选择事件
   act.value = 2
   selectedFile.value = event.target.files[0]
+
+  console.log(selectedFile.value)
   if (!selectedFile.value) {
     return
   }
@@ -78,23 +80,27 @@ const handleFileChange = async (event) => {
 
   // 使用上传图片的接口函数发送请求
   let res = await reqUploadImg(formData)
-  if (res.code == !200) {
+  if (res.code !== 200) {
     ElMessage({
       type: 'error',
       message: '上传失败'
     })
+    act.value = 1
+    return
   }
   //成功
-  //开个定时器，不然上传太快了(为了看到上传的加载效果)
-  let timer = setInterval(() => {
-    act.value = 1
-    clearInterval(timer)
-    imgList.value.push(res.imgUrl)
-    ElMessage({
-      type: 'success',
-      message: '上传成功'
-    })
-  }, 1000)
+  //开个定时器(为了看到上传的加载效果)
+  else {
+    let timer = setInterval(() => {
+      act.value = 1
+      clearInterval(timer)
+      imgList.value.push(res.imgUrl)
+      ElMessage({
+        type: 'success',
+        message: '上传成功'
+      })
+    }, 1000)
+  }
 }
 </script>
 

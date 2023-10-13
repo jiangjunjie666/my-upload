@@ -10,7 +10,7 @@
           </li>
           <li :class="{ active: activeIndex == 2 }" @click="changeUp('/home/fileUp', 2)">
             <el-icon size="20"><FolderAdd /></el-icon>
-            <p>文件上传</p>
+            <p>多文件上传</p>
           </li>
           <li :class="{ active: activeIndex == 3 }" @click="changeUp('/home/videoUp', 3)">
             <el-icon size="20"><VideoCamera /></el-icon>
