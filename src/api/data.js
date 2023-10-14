@@ -1,5 +1,5 @@
 //请求接口
-import http from './http'
+import { http } from './http'
 
 const API = {
   //请求上传图片

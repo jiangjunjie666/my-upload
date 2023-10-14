@@ -22,13 +22,15 @@
       </el-table-column>
     </el-table>
     <el-button type="success" style="margin-top: 20px" @click="handleUpload" :disabled="tableData.length == 0">一键上传</el-button>
+    <el-button size="default" style="margin-top: 20px" type="danger" @click="cancelUpload">取消上传</el-button>
+    <el-button size="default" style="margin-top: 20px" type="danger" @click="free">开启上传</el-button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { reqUploadFile } from '@/api/data.js'
 import { ElMessage } from 'element-plus'
+import { http, cancelSource } from '@/api/http.js'
 //存放文件的数组
 const fileList = ref([])
 //存放table的数据
@@ -75,30 +77,23 @@ const handleUpload = () => {
   if (tableData.value.length == fileIndex.value) {
     return
   }
-  //遍历数组
   tableData.value[fileIndex.value].status = '正在上传'
-  //开启一个定时器
-  let timer = setInterval(() => {
-    //进度条增加
-    percentage.value++
-    if (percentage.value == 100) {
-      uploadFile(fileList.value[fileIndex.value]).then((res) => {
-        if (res) {
-          tableData.value[fileIndex.value].status = '上传成功'
-        } else {
-          //返回的是一个promise
-          tableData.value[fileIndex.value].status = '上传失败'
-        }
-      })
-      percentage.value = 0
-      let timer2 = setTimeout(() => {
-        //递归调用
+  //调用上传文件
+  uploadFile(fileList.value[fileIndex.value]).then((res) => {
+    if (res) {
+      tableData.value[fileIndex.value].status = '上传成功'
+      //重新调用函数
+      let timer = setTimeout(() => {
+        //进度条
+        percentage.value = 0
         handleUpload()
-        clearTimeout(timer2)
-      }, 500)
-      clearInterval(timer)
+        clearTimeout(timer)
+      }, 1000)
+    } else {
+      //返回的是一个promise
+      tableData.value[fileIndex.value].status = '上传失败'
     }
-  }, 50)
+  })
 }
 //上传文件的函数
 const uploadFile = async (value) => {
@@ -106,7 +101,22 @@ const uploadFile = async (value) => {
   const formData = new FormData()
   formData.append('file', value)
   try {
-    const res = await reqUploadFile(formData) // 等待 Promise 解析
+    const res = await http.post('/api/fileUpload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      //监听进度
+      onUploadProgress: (progressEvent) => {
+        //进度条
+        const loaded = progressEvent.loaded
+        const total = progressEvent.total
+        const percentCompleted = Math.round((loaded * 100) / total)
+        //在这里改变进度条的值
+        percentage.value = percentCompleted
+        console.log(`上传进度: ${percentCompleted}%`)
+      }
+    })
+    // 等待 Promise 解析
     console.log(res)
     // 根据 Promise 解析的结果来判断上传是否成功
     if (res.code === 200) {
@@ -123,9 +133,18 @@ const uploadFile = async (value) => {
       return false
     }
   } catch (error) {
-    console.error('上传文件时发生错误:', error)
     return false
   }
+}
+//取消发送
+const cancelUpload = () => {
+  console.log('取消发送')
+  // 取消上传
+  cancelSource.cancel('请求取消')
+}
+const free = () => {
+  //这里我将开启上传设置成了刷新页面，但实际情况下，可以重新创建axios请求示例，其他的请求就不会受到影响了，有兴趣的可以自己实现一下该功能
+  location.reload()
 }
 </script>
 
