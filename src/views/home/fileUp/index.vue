@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <input type="file" ref="fileInputRef" style="display: none" @change="handleFileClick" />
+    <input type="file" ref="fileInputRef" style="display: none" @change="handleFileClick" multiple />
     <p>不可选中重复的文件</p>
     <el-button type="primary" @click="handleBtnClick">可选择多个文件</el-button>
     <el-table :data="tableData" style="width: 100%">
@@ -48,17 +48,19 @@ const handleBtnClick = () => {
 
 //触发文件选择框
 const handleFileClick = (e) => {
-  // console.log(e)
-  let selectedFile = e.target.files[0]
-  //将数据整合起来放进数组中
-  tableData.value.push({
-    id: tableData.value.length,
-    name: selectedFile.name,
-    //判断文件大小，大于0.1mb使用mb，否则使用kb
-    size: selectedFile.size > 1024 * 1024 ? (selectedFile.size / 1024 / 1024).toFixed(2) + 'mb' : (selectedFile.size / 1024).toFixed(2) + 'kb',
-    status: '准备上传'
-  })
-  fileList.value.push(selectedFile)
+  //遍历选中的所有文件添加到数组中
+  for (let i = 0; i < e.target.files.length; i++) {
+    let selectedFile = e.target.files[i]
+    //将数据整合起来放进数组中
+    tableData.value.push({
+      id: tableData.value.length,
+      name: selectedFile.name,
+      //判断文件大小，大于0.1mb使用mb，否则使用kb
+      size: selectedFile.size > 1024 * 1024 ? (selectedFile.size / 1024 / 1024).toFixed(2) + 'mb' : (selectedFile.size / 1024).toFixed(2) + 'kb',
+      status: '准备上传'
+    })
+    fileList.value.push(selectedFile)
+  }
 }
 //删除选中的文件
 const handleDelete = (index, row) => {

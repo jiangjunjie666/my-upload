@@ -28,11 +28,11 @@ const router = createRouter({
           }
         },
         {
-          path: '/home/videoUp',
-          component: () => import('../views/home/videoUp/index.vue'),
-          name: 'videoUp',
+          path: '/home/dragUp',
+          component: () => import('../views/home/dragUp/index.vue'),
+          name: 'dragUp',
           meta: {
-            title: '视频上传'
+            title: '拖拽上传'
           }
         },
         {

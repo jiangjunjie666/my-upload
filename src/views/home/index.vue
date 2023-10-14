@@ -12,9 +12,9 @@
             <el-icon size="20"><FolderAdd /></el-icon>
             <p>多文件上传</p>
           </li>
-          <li :class="{ active: activeIndex == 3 }" @click="changeUp('/home/videoUp', 3)">
-            <el-icon size="20"><VideoCamera /></el-icon>
-            <p>视频上传</p>
+          <li :class="{ active: activeIndex == 3 }" @click="changeUp('/home/dragUp', 3)">
+            <el-icon size="20"><UploadFilled /></el-icon>
+            <p>拖拽上传</p>
           </li>
         </ul>
       </div>
