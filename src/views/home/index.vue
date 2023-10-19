@@ -16,6 +16,14 @@
             <el-icon size="20"><UploadFilled /></el-icon>
             <p>拖拽上传</p>
           </li>
+          <li :class="{ active: activeIndex == 4 }" @click="changeUp('/home/BigFileUp', 4)">
+            <el-icon size="20"><Folder /></el-icon>
+            <p>大文件上传</p>
+          </li>
+          <li :class="{ active: activeIndex == 5 }" @click="changeUp('/home/tailorUp', 5)">
+            <el-icon size="20"><Aim /></el-icon>
+            <p>图片裁剪上传</p>
+          </li>
         </ul>
       </div>
       <div class="layout">

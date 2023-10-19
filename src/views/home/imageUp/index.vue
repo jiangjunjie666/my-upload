@@ -35,42 +35,15 @@ const handleFileChange = async (event) => {
   act.value = 2
   selectedFile.value = event.target.files[0]
 
-  console.log(selectedFile.value)
+  // console.log(selectedFile.value)
   if (!selectedFile.value) {
     return
   }
 
   // 将图片转为base64显示loading状态
   const reader = new FileReader()
-  reader.onload = (e) => {
-    const img = new Image()
-    img.src = e.target.result
-    img.onload = () => {
-      // 图片加载完成
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-
-      const maxWidth = 300 // 设置最大宽度
-      const maxHeight = 300 // 设置最大高度
-      let width = img.width
-      let height = img.height
-
-      // 如果图片尺寸大于最大宽度或最大高度，则按比例缩放图片
-      if (width > maxWidth || height > maxHeight) {
-        const ratio = Math.min(maxWidth / width, maxHeight / height)
-        width *= ratio
-        height *= ratio
-      }
-
-      canvas.width = width
-      canvas.height = height
-
-      ctx.drawImage(img, 0, 0, width, height)
-
-      const compressedDataUrl = canvas.toDataURL('image/jpeg') // 压缩图片质量为0.8
-      console.log(compressedDataUrl)
-      base64Img.value = compressedDataUrl
-    }
+  reader.onload = (event) => {
+    base64Img.value = event.target.result
   }
   reader.readAsDataURL(selectedFile.value) //调用生成base64
 

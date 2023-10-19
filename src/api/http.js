@@ -3,7 +3,7 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 const http = axios.create({
   baseURL: 'http://127.0.0.1:3000',
-  timeout: 5000
+  timeout: 50000
 })
 
 // 创建一个 Cancel Token 对象

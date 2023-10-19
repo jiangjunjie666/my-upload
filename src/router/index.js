@@ -42,7 +42,39 @@ const router = createRouter({
           meta: {
             title: '文件上传'
           }
+        },
+        {
+          path: '/home/BigFileUp',
+          component: () => import('@/views/home/BigFileUp/index.vue'),
+          name: 'BigFileUp',
+          meta: {
+            title: '大文件上传'
+          }
+        },
+        {
+          path: '/home/tailorUp',
+          component: () => import('@/views/home/tailorUp/index.vue'),
+          name: 'tailorUp',
+          meta: {
+            title: '裁剪上传'
+          }
         }
+        // {
+        //   path: '/home/binaryUp',
+        //   component: () => import('@/views/home/binaryUp/index.vue'),
+        //   name: 'binaryUp',
+        //   meta: {
+        //     title: '二进制上传'
+        //   }
+        // },
+        // {
+        //   path: '/home/base64Up',
+        //   component: () => import('@/views/home/base64Up/index.vue'),
+        //   name: 'base64Up',
+        //   meta: {
+        //     title: 'base64上传'
+        //   }
+        // }
       ]
     }
   ]
